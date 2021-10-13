@@ -1,0 +1,6 @@
+[11-Apr-2020 18:04:01 UTC] PHP Fatal error:  Cannot redeclare App\Http\Controllers\ApiController::files() in /home/eslam_license/subdomains/api.licensehosts.com/application/app/Http/Controllers/ApiController.php on line 49
+[11-Apr-2020 18:04:01 UTC] PHP Fatal error:  Cannot redeclare App\Http\Controllers\ApiController::files() in /home/eslam_license/subdomains/api.licensehosts.com/application/app/Http/Controllers/ApiController.php on line 49
+[11-Apr-2020 18:04:01 UTC] PHP Fatal error:  Cannot redeclare App\Http\Controllers\ApiController::files() in /home/eslam_license/subdomains/api.licensehosts.com/application/app/Http/Controllers/ApiController.php on line 49
+[11-Apr-2020 18:04:02 UTC] PHP Fatal error:  Cannot redeclare App\Http\Controllers\ApiController::files() in /home/eslam_license/subdomains/api.licensehosts.com/application/app/Http/Controllers/ApiController.php on line 49
+[11-Apr-2020 18:04:02 UTC] PHP Fatal error:  Cannot redeclare App\Http\Controllers\ApiController::files() in /home/eslam_license/subdomains/api.licensehosts.com/application/app/Http/Controllers/ApiController.php on line 49
+[11-Apr-2020 18:04:02 UTC] PHP Fatal error:  Cannot redeclare App\Http\Controllers\ApiController::files() in /home/eslam_license/subdomains/api.licensehosts.com/application/app/Http/Controllers/ApiController.php on line 49

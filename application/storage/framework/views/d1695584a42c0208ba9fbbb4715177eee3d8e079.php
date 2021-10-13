@@ -1,0 +1,1 @@
+<canvas id="<?php echo e($options['chart_name'] ?? 'myChart'); ?>"></canvas><?php /**PATH /www/wwwroot/api5.bash.com.de/application/vendor/laraveldaily/laravel-charts/src/views/html.blade.php ENDPATH**/ ?>

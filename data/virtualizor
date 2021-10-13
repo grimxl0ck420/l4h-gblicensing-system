@@ -1,0 +1,17 @@
+<?php
+if (posix_getuid() != 0) {
+    exit("Only CLI usage allowed");
+}
+define("VIRTUALIZOR", 1);
+define("VIRTCLI", 1);
+error_reporting(0);
+include_once "/usr/local/virtualizor/universal.php";
+include_once "/usr/local/virtualizor/globals.php";
+include_once "/usr/local/virtualizor/main/functions.php";
+if (!defined("APP")) {
+    define("APP", "Virtualizor");
+}
+loadlicense(true);
+echo "Updated Successfully";
+
+?>

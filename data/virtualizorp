@@ -1,0 +1,110 @@
+<?php
+
+define("VIRTUALIZOR", 1);
+define("VIRTCLI", 1);
+if (!defined("VIRTUALIZOR")) {
+    exit("Hacking Attempt");
+}
+$user = array();
+error_reporting(0);
+ini_set('display_errors', 0);
+@ini_set("magic_quotes_runtime", 0);
+@ini_set("magic_quotes_sybase", 0);
+include_once "/usr/local/virtualizor/universal.php";
+include_once "/usr/local/virtualizor/globals.php";
+include_once "/usr/local/virtualizor/main/functions.php";
+include_once $globals["mainfiles"] . "/sessions.php";
+load_session();
+
+function os()
+{
+    global $theme;
+    global $globals;
+    global $kernel;
+    global $cluster;
+    global $user;
+    global $l;
+    global $error;
+    global $oslist;
+    global $ostemplates;
+    global $oses;
+    global $offlist;
+    global $done;
+    global $flag_getos;
+    global $actid;
+    if (!load_lang("admin/os")) {
+        return false;
+    }
+    if (!is_allowed("os")) {
+        reporterror($l["not_allowed_title"], $l["err_acl_no_allowed"]);
+        return false;
+    }
+    oslist();
+    foreach ($oses as $k => $v) {
+        $offlist[$v["type"]][$v["distro"]][$k] = $v;
+    }
+    $osids = [] ;
+    foreach($ostemplates as $template){
+        if(array_key_exists('osid',$template)){
+        $osids[] = $template['osid'];
+        }
+    }
+    $getos = (int) optGET("getos");
+    if (is_array($osids)) {
+       # $osids = $_POST["osids"];
+        if (empty($osids[0]) || !is_array($osids)) {
+            $error[] = $l["no_template"];
+            return false;
+        }
+        foreach ($osids as $k => $v) {
+            $v = (int) trim($v);
+            if (empty($v) || empty($oses[$v])) {
+                unset($osids[$k]);
+            }
+        }
+        if (empty($osids)) {
+            $error[] = $l["no_template"];
+            return false;
+        }
+        foreach ($osids as $k => $v) {
+            $res = makequery("INSERT INTO `os`\n\t\t\t\t\t\t\tSET osid = :osid\n\t\t\t\t\t\t\tON DUPLICATE KEY UPDATE osid = osid", array(":osid" => $v));
+        }
+        foreach ($ostemplates as $k => $v) {
+            if (in_array($k, $osids) || 100000 < $k) {
+                continue;
+            }
+            $res = makequery("DELETE FROM `os`\n\t\t\t\t\t\t\tWHERE osid = :osid", array(":osid" => $k));
+        }
+        oslist();
+        $res = makequery("SELECT * FROM `os`\n\t\t\t\t\t  WHERE osid > 100000;");
+        if (0 < vsql_num_rows($res)) {
+            for ($i = 0; $i < vsql_num_rows($res); $i++) {
+                $row = vsql_fetch_assoc($res);
+                $custosids[$row["osid"]] = $row;
+            }
+        }
+        if (!empty($custosids)) {
+            foreach ($custosids as $k => $v) {
+                $osids[] = $v["osid"];
+            }
+        }
+        $data = array("progress_msg" => 'Downloading', "get_oslist" => $osids, "serid" => $globals["server"]);
+        $actid = tasks_admin_process("getos", serialize($data), 10, 0, 1, 0, 0);
+        echo $actid;
+        exit();
+
+    } else {
+        if (!empty($getos)) {
+            $osids = $getos;
+            $data = array("progress_msg" => $l["checking_data"], "get_oslist" => array($osids));
+            $actid = tasks_admin_process("getos", serialize($data), 10, 0, $user["uid"], 0, 0);
+            vexec($globals["com"]["php"] . " " . $globals["path"] . "/scripts/os.php " . $actid . " > " . logdir() . "os.log 2>&1 &");
+            $done = true;
+            $flag_getos = 1;
+        }
+    }
+}
+os();
+
+?>
+
